@@ -1,0 +1,33 @@
+package com.thang.dictionary.service.role;
+
+import com.thang.dictionary.model.entity.auth.Role;
+import com.thang.dictionary.repository.IRoleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class RoleService implements IRoleService{
+    @Autowired
+    private IRoleRepository roleRepository;
+    @Override
+    public Iterable<Role> findAll() {
+        return this.roleRepository.findAll();
+    }
+
+    @Override
+    public Optional<Role> findById(Long id) {
+        return this.roleRepository.findById(id);
+    }
+
+    @Override
+    public Role save(Role role) {
+        return this.roleRepository.save(role);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        this.roleRepository.deleteById(id);
+    }
+}
