@@ -3,11 +3,13 @@ package com.thang.dictionary.config.security;
 import com.thang.dictionary.config.CustomAccessDeniedHandler;
 import com.thang.dictionary.config.JwtAuthenticationFilter;
 import com.thang.dictionary.config.RestAuthenticationEntryPoint;
+import com.thang.dictionary.model.entity.TypeSearch;
 import com.thang.dictionary.model.entity.auth.Role;
 import com.thang.dictionary.model.entity.auth.User;
 import com.thang.dictionary.repository.IRoleRepository;
 import com.thang.dictionary.repository.IUserRepository;
 import com.thang.dictionary.service.role.IRoleService;
+import com.thang.dictionary.service.typeSearch.ITypeSearchService;
 import com.thang.dictionary.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +43,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private IRoleRepository roleRepository;
+
+    @Autowired
+    private ITypeSearchService typeSearchService;
 
 
 
@@ -81,7 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void init() {
         List<User> users = userRepository.findAll();
         List<Role> roleList = roleRepository.findAll();
-
+        Iterable<TypeSearch> typeSearches = typeSearchService.findAll();
         if (roleList.isEmpty()) {
             Role roleAdmin = new Role("ROLE_ADMIN");
             roleService.save(roleAdmin);
@@ -92,6 +97,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         if (users.isEmpty()) {
             User admin = new User("admin", "thuthuyda1");
             userService.saveAdmin(admin);
+        }
+        if (!typeSearches.iterator().hasNext()) {
+            this.typeSearchService.save(new TypeSearch("Nhật -> Việt"));
+            this.typeSearchService.save(new TypeSearch("Việt -> Nhật"));
         }
     }
 

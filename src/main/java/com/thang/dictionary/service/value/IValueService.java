@@ -1,5 +1,6 @@
 package com.thang.dictionary.service.value;
 
+import com.thang.dictionary.model.dto.VocabularyDTO;
 import com.thang.dictionary.model.entity.Value;
 import com.thang.dictionary.service.IGeneralService;
 
@@ -10,5 +11,6 @@ public interface IValueService extends IGeneralService<Value> {
 
     List<Value> findValuesByTranslationContaining(String translation);
 
+    List<VocabularyDTO> findVocabularyDTOByListValue(List<Value> values);
 
 }
