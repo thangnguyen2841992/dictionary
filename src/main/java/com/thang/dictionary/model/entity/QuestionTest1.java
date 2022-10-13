@@ -21,11 +21,11 @@ public class QuestionTest1 {
     private String correctAnswer;
 
     @ManyToOne
-    private Test test;
+    private QuestionTest questionTest;
 
-    public QuestionTest1(String question, String correctAnswer, Test test) {
+    public QuestionTest1(String question, String correctAnswer, QuestionTest questionTest) {
         this.question = question;
         this.correctAnswer = correctAnswer;
-        this.test = test;
+        this.questionTest = questionTest;
     }
 }

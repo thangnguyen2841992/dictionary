@@ -16,12 +16,15 @@ public class AnswerQuestion1 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String note;
+
     private String answer;
 
     @ManyToOne
     private QuestionTest1 questionTest1;
 
-    public AnswerQuestion1(String answer, QuestionTest1 questionTest1) {
+    public AnswerQuestion1(String note, String answer, QuestionTest1 questionTest1) {
+        this.note = note;
         this.answer = answer;
         this.questionTest1 = questionTest1;
     }
