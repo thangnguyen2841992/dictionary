@@ -1,5 +1,6 @@
 package com.thang.dictionary.controller;
 
+import com.thang.dictionary.model.QuestionTest1DTo;
 import com.thang.dictionary.model.dto.ErrorMessage;
 import com.thang.dictionary.model.dto.QuestionTest1Form;
 import com.thang.dictionary.model.dto.QuestionTestForm;
@@ -63,6 +64,7 @@ public class QuestionTestRestController {
     @PostMapping("/createQuestionTest1")
     public ResponseEntity<?> createNewQuestionTest1(@RequestBody QuestionTest1Form questionTest1Form) {
         Optional<QuestionTest> test = this.questionTestService.findById(questionTest1Form.getQuestionTestId());
+        Optional<Test> testOptional = this.testService.findById(questionTest1Form.getTestId());
         if (!test.isPresent()){
             return new ResponseEntity<>("Bài test không tồn tại!", HttpStatus.BAD_REQUEST);
         }
@@ -70,11 +72,20 @@ public class QuestionTestRestController {
         newQuestionTest1.setQuestion(questionTest1Form.getCaption());
         newQuestionTest1.setCorrectAnswer(questionTest1Form.getAnswer());
         newQuestionTest1.setQuestionTest(test.get());
+        newQuestionTest1.setTest(testOptional.get());
         this.questionTest1Service.save(newQuestionTest1);
         AnswerQuestion1[] answerQuestion1s = questionTest1Form.getAnswerQuestion1s();
         for (int i = 0; i < answerQuestion1s.length ; i++) {
             this.answerQuestion1Service.save(new AnswerQuestion1("" + (i+1), answerQuestion1s[i].getAnswer(), newQuestionTest1));
         }
         return new ResponseEntity<>(newQuestionTest1, HttpStatus.OK);
+    }
+    @GetMapping("getAllQuestionTest1/test/{testId}")
+    public ResponseEntity<?> getAllQuestionTest1OfQuestionTest(@PathVariable Long testId) {
+        List<QuestionTest1DTo> questionTest1DToList = this.questionTestService.findAllQuestionTest1(testId);
+        if (questionTest1DToList.size() == 0 ) {
+            return new ResponseEntity<>(new ErrorMessage("Nội dung trống"), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(questionTest1DToList, HttpStatus.OK);
     }
 }

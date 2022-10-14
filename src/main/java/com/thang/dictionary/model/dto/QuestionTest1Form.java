@@ -15,5 +15,7 @@ public class QuestionTest1Form {
 
     private String answer;
 
+    private Long testId;
+
     private Long questionTestId;
 }

@@ -21,6 +21,8 @@ public class AnswerQuestion1 {
     private String answer;
 
     @ManyToOne
+    private Test test;
+    @ManyToOne
     private QuestionTest1 questionTest1;
 
     public AnswerQuestion1(String note, String answer, QuestionTest1 questionTest1) {

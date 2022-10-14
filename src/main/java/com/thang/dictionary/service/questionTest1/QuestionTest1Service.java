@@ -5,6 +5,7 @@ import com.thang.dictionary.repository.IQuestionTest1Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,5 +30,10 @@ public class QuestionTest1Service implements IQuestionTest1Service{
     @Override
     public void deleteById(Long id) {
         this.questionTest1Repository.deleteById(id);
+    }
+
+    @Override
+    public List<QuestionTest1> findQuestionTest1sByTestId(Long testId) {
+        return this.questionTest1Repository.findQuestionTest1sByTestId(testId);
     }
 }
