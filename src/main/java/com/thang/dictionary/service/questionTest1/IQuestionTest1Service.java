@@ -8,4 +8,6 @@ import java.util.List;
 public interface IQuestionTest1Service extends IGeneralService<QuestionTest1> {
     List<QuestionTest1>  findQuestionTest1sByTestId(Long testId);
 
+    Integer countCorrectAnswer(Long testId ,List<String> answers);
+
 }

@@ -2,6 +2,7 @@ package com.thang.dictionary.controller;
 
 import com.thang.dictionary.model.QuestionTest1DTo;
 import com.thang.dictionary.model.dto.ErrorMessage;
+import com.thang.dictionary.model.dto.ListAnswer;
 import com.thang.dictionary.model.dto.QuestionTest1Form;
 import com.thang.dictionary.model.dto.QuestionTestForm;
 import com.thang.dictionary.model.entity.AnswerQuestion1;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,5 +89,11 @@ public class QuestionTestRestController {
             return new ResponseEntity<>(new ErrorMessage("Nội dung trống"), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(questionTest1DToList, HttpStatus.OK);
+    }
+    @PostMapping("/getCountCorrectAnswer/test/{testId}")
+    public ResponseEntity<?> getCountCorrectAnswer(@PathVariable Long testId, @RequestBody ListAnswer listAnswer) {
+        List<String> answers = Arrays.asList(listAnswer.getListAnswer());
+        int count = this.questionTest1Service.countCorrectAnswer(testId, answers);
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 }
