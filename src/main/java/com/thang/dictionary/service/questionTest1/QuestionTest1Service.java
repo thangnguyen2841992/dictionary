@@ -1,7 +1,10 @@
 package com.thang.dictionary.service.questionTest1;
 
+import com.thang.dictionary.model.QuestionTest1DTo;
+import com.thang.dictionary.model.entity.AnswerQuestion1;
 import com.thang.dictionary.model.entity.QuestionTest1;
 import com.thang.dictionary.repository.IQuestionTest1Repository;
+import com.thang.dictionary.service.answerQuestion1.IAnswerQuestion1Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,8 @@ import java.util.Optional;
 public class QuestionTest1Service implements IQuestionTest1Service{
     @Autowired
     private IQuestionTest1Repository questionTest1Repository;
+    @Autowired
+    private IAnswerQuestion1Service answerQuestion1Service;
     @Override
     public Iterable<QuestionTest1> findAll() {
         return this.questionTest1Repository.findAll();
@@ -52,5 +57,21 @@ public class QuestionTest1Service implements IQuestionTest1Service{
             }
         }
         return count;
+    }
+
+    @Override
+    public QuestionTest1DTo findQuestionTest1DTOByQuestionTest1Id(Long questionTest1Id) {
+        List<AnswerQuestion1> answerQuestion1List = this.answerQuestion1Service.findAnswerQuestion1ByQuestionTest1Id(questionTest1Id);
+
+        Optional<QuestionTest1> questionTest1 = findById(questionTest1Id);
+
+        QuestionTest1DTo questionTest1DTo = new QuestionTest1DTo();
+
+        questionTest1DTo.setQuestionTest1Id(questionTest1Id);
+        questionTest1DTo.setQuestion(questionTest1.get().getQuestion());
+        questionTest1DTo.setQuestionTest(questionTest1.get().getQuestionTest());
+        questionTest1DTo.setCorrectAnswer(questionTest1.get().getCorrectAnswer());
+        questionTest1DTo.setAnswerQuestion1List(answerQuestion1List);
+        return questionTest1DTo;
     }
 }

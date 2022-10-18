@@ -55,6 +55,7 @@ public class QuestionTestRestController {
         this.questionTestService.save(newQuestionTest);
         return new ResponseEntity<>(newQuestionTest, HttpStatus.CREATED);
     }
+
     @GetMapping("/test/{testId}")
     public ResponseEntity<?> getAllQuestionTestOfTest(@PathVariable Long testId) {
         List<QuestionTest> questionTestList = this.questionTestService.findQuestionTestByTestId(testId);
@@ -63,11 +64,12 @@ public class QuestionTestRestController {
         }
         return new ResponseEntity<>(questionTestList, HttpStatus.OK);
     }
+
     @PostMapping("/createQuestionTest1")
     public ResponseEntity<?> createNewQuestionTest1(@RequestBody QuestionTest1Form questionTest1Form) {
         Optional<QuestionTest> test = this.questionTestService.findById(questionTest1Form.getQuestionTestId());
         Optional<Test> testOptional = this.testService.findById(questionTest1Form.getTestId());
-        if (!test.isPresent()){
+        if (!test.isPresent()) {
             return new ResponseEntity<>("Bài test không tồn tại!", HttpStatus.BAD_REQUEST);
         }
         QuestionTest1 newQuestionTest1 = new QuestionTest1();
@@ -77,23 +79,35 @@ public class QuestionTestRestController {
         newQuestionTest1.setTest(testOptional.get());
         this.questionTest1Service.save(newQuestionTest1);
         AnswerQuestion1[] answerQuestion1s = questionTest1Form.getAnswerQuestion1s();
-        for (int i = 0; i < answerQuestion1s.length ; i++) {
-            this.answerQuestion1Service.save(new AnswerQuestion1("" + (i+1), answerQuestion1s[i].getAnswer(), newQuestionTest1));
+        for (int i = 0; i < answerQuestion1s.length; i++) {
+            this.answerQuestion1Service.save(new AnswerQuestion1("" + (i + 1), answerQuestion1s[i].getAnswer(), newQuestionTest1));
         }
         return new ResponseEntity<>(newQuestionTest1, HttpStatus.OK);
     }
+
     @GetMapping("getAllQuestionTest1/test/{testId}")
     public ResponseEntity<?> getAllQuestionTest1OfQuestionTest(@PathVariable Long testId) {
         List<QuestionTest1DTo> questionTest1DToList = this.questionTestService.findAllQuestionTest1(testId);
-        if (questionTest1DToList.size() == 0 ) {
+        if (questionTest1DToList.size() == 0) {
             return new ResponseEntity<>(new ErrorMessage("Nội dung trống"), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(questionTest1DToList, HttpStatus.OK);
     }
+
     @PostMapping("/getCountCorrectAnswer/test/{testId}")
     public ResponseEntity<?> getCountCorrectAnswer(@PathVariable Long testId, @RequestBody ListAnswer listAnswer) {
         List<String> answers = Arrays.asList(listAnswer.getListAnswer());
         int count = this.questionTest1Service.countCorrectAnswer(testId, answers);
         return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
+    @GetMapping("/findQuestionTest1DTOByQuestionTest1Id/questionTest1/{questionTest1Id}")
+    public ResponseEntity<?> findQuestionTest1DTOByQuestionTest1Id(@PathVariable Long questionTest1Id) {
+        Optional<QuestionTest1> questionTest1Optional = this.questionTest1Service.findById(questionTest1Id);
+        if (!questionTest1Optional.isPresent()) {
+            return new ResponseEntity<>(new ErrorMessage("Câu hỏi không tồn tại!"), HttpStatus.BAD_REQUEST);
+        }
+        QuestionTest1DTo questionTest1DTo = this.questionTest1Service.findQuestionTest1DTOByQuestionTest1Id(questionTest1Id);
+        return new ResponseEntity<>(questionTest1DTo, HttpStatus.OK);
     }
 }
