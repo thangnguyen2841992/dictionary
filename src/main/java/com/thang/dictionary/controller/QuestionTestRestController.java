@@ -16,9 +16,11 @@ import com.thang.dictionary.service.test.ITestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -109,5 +111,61 @@ public class QuestionTestRestController {
         }
         QuestionTest1DTo questionTest1DTo = this.questionTest1Service.findQuestionTest1DTOByQuestionTest1Id(questionTest1Id);
         return new ResponseEntity<>(questionTest1DTo, HttpStatus.OK);
+    }
+    @GetMapping("/findQuestionTest/questionTest/{questionTestId}")
+    public ResponseEntity<?> findQuestionTestId(@PathVariable Long questionTestId) {
+        Optional<QuestionTest> questionTestOptional = this.questionTestService.findById(questionTestId);
+        if (!questionTestOptional.isPresent()) {
+            return new ResponseEntity<>(new ErrorMessage("Câu hỏi không tồn tại!"), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(questionTestOptional.get(), HttpStatus.OK);
+    }
+    @DeleteMapping("/deleteQuestionTest/questionTest/{questionTestId}")
+    public ResponseEntity<?> deleteQuestionTest(@PathVariable Long questionTestId) {
+        Optional<QuestionTest> questionTestOptional = this.questionTestService.findById(questionTestId);
+        if (!questionTestOptional.isPresent()) {
+            return new ResponseEntity<>(new ErrorMessage("Câu hỏi không tồn tại!"), HttpStatus.BAD_REQUEST);
+        }
+        List<QuestionTest1> questionTest1List = this.questionTest1Service.findQuestionTest1sByQuestionTestId(questionTestId);
+
+
+        this.questionTestService.deleteById(questionTestId);
+        return new ResponseEntity<>(new ErrorMessage("Xoá câu hỏi thành công!"), HttpStatus.OK);
+    }
+    @PutMapping("/editQuestionTest/questionTest/{questionTestId}")
+    public ResponseEntity<?> editQuestionTest(@PathVariable Long questionTestId, @RequestBody QuestionTestForm questionTestForm) {
+        Optional<QuestionTest> questionTestOptional = this.questionTestService.findById(questionTestId);
+        if (!questionTestOptional.isPresent()) {
+            return new ResponseEntity<>(new ErrorMessage("Câu hỏi không tồn tại!"), HttpStatus.BAD_REQUEST);
+        }
+        questionTestOptional.get().setNote(questionTestForm.getNote());
+        questionTestOptional.get().setCaption(questionTestForm.getCaption());
+        this.questionTestService.save(questionTestOptional.get());
+        return new ResponseEntity<>(questionTestOptional.get(), HttpStatus.OK);
+    }
+    @PutMapping("/editQuestionTest1/questionTest1/{questionTest1Id}")
+    public ResponseEntity<?> editQuestionTest1(@PathVariable Long questionTest1Id, @RequestBody QuestionTest1Form questionTest1Form) {
+        Optional<QuestionTest1> questionTest1Optional = this.questionTest1Service.findById(questionTest1Id);
+        if (!questionTest1Optional.isPresent()) {
+            return new ResponseEntity<>(new ErrorMessage("Câu hỏi không tồn tại!"), HttpStatus.BAD_REQUEST);
+        }
+        questionTest1Optional.get().setQuestion(questionTest1Form.getCaption());
+        questionTest1Optional.get().setCorrectAnswer(questionTest1Form.getAnswer());
+        this.questionTest1Service.save(questionTest1Optional.get());
+        List<AnswerQuestion1> answerQuestion1List = this.answerQuestion1Service.findAnswerQuestion1ByQuestionTest1Id(questionTest1Id);
+        for (int i = 0; i < answerQuestion1List.size(); i++) {
+            answerQuestion1List.get(i).setAnswer(questionTest1Form.getAnswerQuestion1s()[i].getAnswer());
+            this.answerQuestion1Service.save(answerQuestion1List.get(i));
+        }
+        return new ResponseEntity<>(new ErrorMessage("Cập nhật nội dung câu hỏi thành công!"), HttpStatus.OK);
+    }
+    @DeleteMapping("/deleteQuestionTest1/questionTest1/{questionTest1Id}")
+    public ResponseEntity<?>  deleteQuestionTest1(@PathVariable Long questionTest1Id) {
+        Optional<QuestionTest1> questionTest1Optional = this.questionTest1Service.findById(questionTest1Id);
+        if (!questionTest1Optional.isPresent()) {
+            return new ResponseEntity<>(new ErrorMessage("Câu hỏi không tồn tại!"), HttpStatus.BAD_REQUEST);
+        }
+        this.questionTest1Service.deleteById(questionTest1Id);
+        return new ResponseEntity<>(new ErrorMessage("Xoá thành công!"), HttpStatus.OK);
     }
 }

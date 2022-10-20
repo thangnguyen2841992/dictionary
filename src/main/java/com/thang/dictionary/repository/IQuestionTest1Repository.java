@@ -10,4 +10,6 @@ import java.util.List;
 public interface IQuestionTest1Repository extends JpaRepository<QuestionTest1, Long> {
     List<QuestionTest1>  findQuestionTest1sByTestId(Long testId);
 
+    List<QuestionTest1> findQuestionTest1sByQuestionTestId(Long questionTestId);
+
 }

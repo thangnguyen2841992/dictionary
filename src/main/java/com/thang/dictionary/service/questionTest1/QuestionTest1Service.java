@@ -74,4 +74,9 @@ public class QuestionTest1Service implements IQuestionTest1Service{
         questionTest1DTo.setAnswerQuestion1List(answerQuestion1List);
         return questionTest1DTo;
     }
+
+    @Override
+    public List<QuestionTest1> findQuestionTest1sByQuestionTestId(Long questionTestId) {
+        return this.questionTest1Repository.findQuestionTest1sByQuestionTestId(questionTestId);
+    }
 }

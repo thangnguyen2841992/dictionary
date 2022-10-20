@@ -14,4 +14,7 @@ public interface IQuestionTest1Service extends IGeneralService<QuestionTest1> {
 
     QuestionTest1DTo findQuestionTest1DTOByQuestionTest1Id(Long questionTest1Id);
 
+    List<QuestionTest1> findQuestionTest1sByQuestionTestId(Long questionTestId);
+
+
 }

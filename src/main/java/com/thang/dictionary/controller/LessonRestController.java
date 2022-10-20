@@ -1,6 +1,7 @@
 package com.thang.dictionary.controller;
 
 import com.thang.dictionary.model.dto.ErrorMessage;
+import com.thang.dictionary.model.dto.VocabularyAudioFileForm;
 import com.thang.dictionary.model.entity.Book;
 import com.thang.dictionary.model.entity.Lesson;
 import com.thang.dictionary.repository.ILessonRepository;
@@ -54,5 +55,15 @@ public class LessonRestController {
         newLesson.setName(lesson.getName());
         this.lessonService.save(newLesson);
         return new ResponseEntity<>(newLesson, HttpStatus.CREATED);
+    }
+    @PutMapping("/addVocabularyFileAudio/lesson/{lessonId}")
+    public ResponseEntity<?> addVocabularyFileAudio(@PathVariable Long lessonId, @RequestBody VocabularyAudioFileForm vocabularyAudioFileForm) {
+        Optional<Lesson> lessonOptional = this.lessonService.findById(lessonId);
+        if (!lessonOptional.isPresent()) {
+            return new ResponseEntity<>(new ErrorMessage("Bài học không tồn tại!"), HttpStatus.BAD_REQUEST);
+        }
+        lessonOptional.get().setFileVocabularyAudio(vocabularyAudioFileForm.getAudioFile());
+        this.lessonService.save(lessonOptional.get());
+        return new ResponseEntity<>(lessonOptional.get(), HttpStatus.OK);
     }
 }

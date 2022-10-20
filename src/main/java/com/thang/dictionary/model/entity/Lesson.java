@@ -18,6 +18,8 @@ public class Lesson {
 
     private String name;
 
+    private String fileVocabularyAudio;
+
     @ManyToOne
     private Book book;
 }
